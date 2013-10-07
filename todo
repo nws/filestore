@@ -1,0 +1,15 @@
+if file exists:
+	default: error
+	if during replication: silently do nothing
+	if explicitly specified: overwrite
+
+variant handling
+
+replication
+
+	mode=
+		store (default)
+
+	replication=
+		0 (default)
+		1
