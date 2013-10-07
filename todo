@@ -1,15 +1,4 @@
-if file exists:
-	default: error
-	if during replication: silently do nothing
-	if explicitly specified: overwrite
-
-variant handling
-
-replication
-
-	mode=
-		store (default)
-
-	replication=
-		0 (default)
-		1
+error handling
+error logging
+serverr: if not found locally, find another random server and forward to that, maybe they have it
+	(could be replication lag)

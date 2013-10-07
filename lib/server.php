@@ -14,12 +14,14 @@ function file_serve($config) {
 	case 'PUT':
 		$fid = $_GET['fid'];
 		$replication = isset($_GET['replication']) ? $_GET['replication'] : '';
+		$variant = isset($_GET['variant']) ? $_GET['variant'] : null;
 
-		file_store_accept_file($fid, $replication);
+		file_store_accept_file($fid, $variant, $replication);
 		break;
 
 	case 'GET':
-		$file_path = file_store_get_file_path($_GET['fid']);
+		$variant = isset($_GET['variant']) ? $_GET['variant'] : null;
+		$file_path = file_store_get_file_path($_GET['fid'], $variant);
 		file_store_send_file($file_path);
 		break;
 

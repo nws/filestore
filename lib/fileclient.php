@@ -23,6 +23,10 @@ function file_client_make_uri($volume_uri, $fid, $params = array()) {
 	parse_str($vuri['query'], $query);
 	$query['fid'] = $fid;
 
+	if (!isset($params['variant'])) {
+		$params['variant'] = 'original';
+	}
+
 	return sprintf("%s://%s%s%s?%s",
 		$vuri['scheme'],
 		$vuri['host'],
@@ -31,11 +35,11 @@ function file_client_make_uri($volume_uri, $fid, $params = array()) {
 		http_build_query($query + $params, null, '&'));
 }
 
-function file_client_put_file($file_spec) {
-	$fid = file_client_gen_id();
+function file_client_put_file($file_spec, $variant = null, $to_fid = null) {
+	$fid = $to_fid !== null ? $to_fid : file_client_gen_id();
 	$volume_id = file_client_get_volume_id($fid);
 	$volume_uri = file_client_get_volume_uri($volume_id);
-	$file_uri = file_client_make_uri($volume_uri, $fid);
+	$file_uri = file_client_make_uri($volume_uri, $fid, array('variant' => $variant));
 
 	if (file_client_upload_file($file_uri, $file_spec)) {
 		error_log("upload succeeded: $fid");
@@ -89,16 +93,16 @@ function file_client_upload_file($file_uri, $file_spec) {
 	return true;
 }
 
-function file_client_get_file_uri($fid) {
+function file_client_get_file_uri($fid, $variant = null) {
 	$volume_id = file_client_get_volume_id($fid);
 	$volume_uri = file_client_get_volume_uri($volume_id);
-	$file_uri = file_client_make_uri($volume_uri, $fid);
+	$file_uri = file_client_make_uri($volume_uri, $fid, array('variant' => $variant));
 
 	return $file_uri;
 }
 
-function file_client_get_file_stream($fid) {
-	$file_uri = file_client_get_file_uri($fid);
+function file_client_get_file_stream($fid, $variant = null) {
+	$file_uri = file_client_get_file_uri($fid, $variant);
 
 	$fh = fopen('php://memory', 'w+');
 
